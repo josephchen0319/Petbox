@@ -6,24 +6,25 @@ import java.security.SecureRandom;
 
 public class HashPassword {
 
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
+//
+//		HashPassword p = new HashPassword();
+//		String password = "afhgfjf123";
+//		String algorithm = "SHA-256";
+//		byte[] salt = p.createSalt();
+//		String hashValue = p.generateHash(password, algorithm, salt);
+//		System.out.println("hash:ï¿½@" + hashValue);
+//		System.out.println(hashValue.length());
+//	}
 
-		HashPassword p = new HashPassword();
-		String password = "afhgfjf123";
-		String algorithm = "SHA-256";
-		byte[] salt = p.createSalt();
-		String hashValue = p.generateHash(password, algorithm, salt);
-		System.out.println("hash:¡@" + hashValue);
-		System.out.println(hashValue.length());
-	}
-
-	private String generateHash(String password, String algorithm, byte[] salt) {
+//	public String generateHash(String password, String algorithm, byte[] salt) {
+	public String generateHash(String password, String algorithm) {
 
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance(algorithm);
 			md.reset();
-			md.update(salt);
+//			md.update(salt);
 			byte[] hash = md.digest(password.getBytes());
 
 			return bytesToStringHex(hash);
@@ -36,7 +37,7 @@ public class HashPassword {
 
 	private final static char[] HEXARRAY = "0123456789ABCDEF".toCharArray();
 
-	public String bytesToStringHex(byte[] hash) {
+	private String bytesToStringHex(byte[] hash) {
 		char[] hexChars = new char[hash.length * 2];
 		for (int i = 0; i < hash.length; i++) {
 			int v = hash[i] & 0xFF;

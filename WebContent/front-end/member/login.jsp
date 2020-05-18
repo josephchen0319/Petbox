@@ -6,7 +6,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<html>
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,12 +28,18 @@
 	</c:if>
 	
 
-	<form action="<%=request.getContextPath()%>/member/controller" method="post">
-		<input type="text" name="email">
-		<input type="password" name="password">
-		<input type="hidden" name="action" value="login">
+	<form action="<%=request.getContextPath()%>/member/controller" method="post" style="{display: inline-block;}">
+		<label for="login_email">email</label>
+		<input type="text" name="email" id="login_email"> <br><br>
+		
+		<label for="login_password">password</label>
+		<input type="password" name="password" id="login_password">
+		<input type="hidden" name="action" value="login"><br><br>
 		<input type="submit" name="submit">
-	</form>	
+	</form>	<br><br>
+	
+	
+
 
 
 
