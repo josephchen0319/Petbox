@@ -11,12 +11,32 @@
 <head>
 <meta charset="UTF-8">
 <title>Update personal info</title>
+<style type="text/css">
+* {
+  box-sizing: border-box;
+}
+
+#update_info {
+	width:25%;
+	float: left;
+}
+
+/* #image_holder { */
+/* 	width: 50%; */
+/* 	float: right; */
+
+/* } */
+
+
+
+</style>
+
 </head>
 <body>
 
 	<h1>Update personal info</h1>
 
-	<form action="<%=request.getContextPath()%>/member/controller" method="post" enctype="multipart/form-data">
+	<form id="update_info" action="<%=request.getContextPath()%>/member/controller" method="post" enctype="multipart/form-data" style="display:inline-block;">
 		<label for="name">姓名</label>
 		<input type="text" id="name" name="name" value="${memberVO.name}"><br><br>
 		
@@ -53,7 +73,10 @@
 		<input type="submit" name="submit">
 		
 	</form>
-	
+	<br><br>
+	<div id="image_holder" style="display: inline-block; width: 400px; height: 400px; border: 1px solid black;">
+	</div>
+	<br><br>
 	
 	<c:if test="${not empty errorMsgs}">
 		<font style="color:red">Please correct the error:</font>
@@ -63,5 +86,7 @@
 			</c:forEach>
 		</ul>
 	</c:if>
+	
+	<script src="<%=request.getContextPath()%>/front-end/member/showImage.js"></script>
 </body>
 </html>
