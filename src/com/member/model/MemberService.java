@@ -1,9 +1,6 @@
 package com.member.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import com.member.security.HashPassword;
 
@@ -17,69 +14,65 @@ public class MemberService {
 	public MemberVO getMemberByEmail(String email) {
 		return dao.findByEmail(email);
 	}
+	
+	private static String hashPassword(String password) {
+		String algorithm = "SHA-256";
+		HashPassword hp = new HashPassword();
+		String hashedPassword = hp.generateHash(password, algorithm);
+		return hashedPassword;
+	}
 
 	public MemberVO login(String email, String password) {
-		MemberVO memberVO = dao.findByEmail(email);
-		String algorithm = "SHA-256";
-		if (memberVO != null) {
-			if (password != null && password.length() != 0) {
-				HashPassword hp = new HashPassword();
-				String hashedPassword = hp.generateHash(password, algorithm);
-				String pass = memberVO.getPassword();
-				if (hashedPassword.equals(pass)) {
-					return memberVO;
-				}
+		MemberVO memberVO = null;
+		if ((memberVO = dao.findByEmail(email)) != null) {
+			String hashedPassword = hashPassword(password);
+			String pass = memberVO.getPassword();
+			if (hashedPassword.equals(pass)) {
+				memberVO.setPassword(pass);
+				return memberVO;
 			}
 		}
 		return null;
 	}
 
-	public MemberVO signUp(String name, String email, String password, String phone_num, String address, String sex,
-			String birthday) {
+	public MemberVO signUp(MemberVO memberVO) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN);
-		Date bd_format;
-		MemberVO memberVO = new MemberVO();
-		java.sql.Date bday = null;
-		String algorithm = "SHA-256";
-
-		try {
-			bd_format = sdf.parse(birthday);
-			bday = new java.sql.Date(bd_format.getTime());
-		} catch (Exception e) {
-			bday = null;
-		}
-
-		HashPassword hp = new HashPassword();
-		String hashedPassword = hp.generateHash(password, algorithm);
 		List<MemberVO> members = dao.getAll();
 		for (MemberVO mv : members) {
-			if (email.equals(mv.getEmail())) {
-				return null;
-			}
-			;
+			if (memberVO.getEmail().equals(mv.getEmail())) {
+				memberVO.setEmail("");
+				return memberVO;
+			};
 		}
-
-		memberVO.setName(name);
-		memberVO.setEmail(email);
-		memberVO.setAddress(address);
-		memberVO.setPhone_num(phone_num);
-		memberVO.setSex(sex);
-		memberVO.setBirthday(bday);
-		if (hashedPassword == null) {
-			memberVO.setPassword(password);
-		} else {
-			memberVO.setPassword(hashedPassword);
-		}
+		
+		String hashedPassword = hashPassword(memberVO.getPassword());
+		memberVO.setPassword(hashedPassword);			
 		memberVO.setMember_state(0);
 		dao.insert(memberVO);
-
 		return memberVO;
 	}
-
-	public MemberVO updatePersonalInfo(MemberVO memberVO) {
-
+	
+	public MemberVO updateInfo(MemberVO memberVO, String new_password) {
+		String input_password = memberVO.getPassword();
+		String old_password = hashPassword(input_password);
+		String stored_password = dao.findByEmail(memberVO.getEmail()).getPassword();
+		System.out.println("this is password: " + input_password);
+		
+		if (old_password.equals(stored_password)) {
+			memberVO.setPassword(hashPassword(new_password));
+			dao.update(memberVO);
+		} else if (input_password.trim().length() == 0 || input_password == null) {
+			memberVO.setPassword(stored_password);
+			dao.update(memberVO);
+		} else if (!old_password.equals(stored_password) && input_password.trim().length() != 0) {
+			memberVO = dao.findByEmail(memberVO.getEmail());
+			memberVO.setPassword("");
+		}
 		return memberVO;
+	}
+	
+	public void updateState(MemberVO memberVO) {
+		
 	}
 
 	public MemberVO submitApplication(MemberVO memberVO) {

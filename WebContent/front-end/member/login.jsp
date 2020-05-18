@@ -18,16 +18,6 @@
 
 	<h1>Login</h1>
 	
-	<c:if test="${not empty errorMsgs}">
-		<font style="color:red">Please correct the error:</font>
-		<ul>
-		    <c:forEach var="message" items="${errorMsgs}">
-				<li style="color:red">${message}</li>
-			</c:forEach>
-		</ul>
-	</c:if>
-	
-
 	<form action="<%=request.getContextPath()%>/member/controller" method="post" style="{display: inline-block;}">
 		<label for="login_email">email</label>
 		<input type="text" name="email" id="login_email"> <br><br>
@@ -39,10 +29,14 @@
 	</form>	<br><br>
 	
 	
+	<c:if test="${not empty errorMsgs}">
+		<font style="color:red">Please correct the error:</font>
+		<ul>
+		    <c:forEach var="message" items="${errorMsgs}">
+				<li style="color:red">${message}</li>
+			</c:forEach>
+		</ul>
+	</c:if>
 
-
-
-
-	
 </body>
 </html>

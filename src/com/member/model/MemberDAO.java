@@ -32,10 +32,9 @@ public class MemberDAO implements MemberDAO_interface {
 			+ ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	// 20��?
-	private static final String UPDATE = "INSERT INTO member (email, password, "
-			+ "name, sex, address, birthday, phone_num, profile_image, nickname, pet_class, blog_cover_image, "
-			+ "blog_name, member_state, id_number, bank_account, document_image"
-			+ ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String UPDATE = "UPDATE member set email=?, password=?, name=?, sex=?, address=?, " + 
+			"birthday=?, phone_num=?, profile_image=?, nickname=?, pet_class=?, blog_cover_image=?, " + 
+			"blog_name=?, member_state=?, id_number=?, bank_account=?, document_image=? where email = ?";
 
 	private static final String GET_ALL = "SELECT member_id, email, member_state, create_time "
 			+ "FROM member ORDER BY CREATE_TIME";
@@ -102,7 +101,7 @@ public class MemberDAO implements MemberDAO_interface {
 			ps.setString(14, memberVO.getId_number());
 			ps.setString(15, memberVO.getBank_account());
 			ps.setBytes(16, memberVO.getDocument_image());
-			ps.setString(17, memberVO.getMember_id());
+			ps.setString(17, memberVO.getEmail());
 
 			ps.executeUpdate();
 
@@ -253,7 +252,7 @@ public class MemberDAO implements MemberDAO_interface {
 		MemberVO memberVO;
 
 		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(DELETE);
+				PreparedStatement ps = con.prepareStatement(GET_APPLICANTS);
 				ResultSet rs = ps.executeQuery();) {
 
 			while (rs.next()) {
