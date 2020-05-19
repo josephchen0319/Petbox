@@ -74,6 +74,11 @@ public class MemberService {
 	public void updateState(MemberVO memberVO) {
 		
 	}
+	
+	public List<MemberVO> getAllMembers() {
+		List<MemberVO> members = dao.getAll();
+		return members;
+	}
 
 	public MemberVO submitApplication(MemberVO memberVO) {
 		return memberVO;
