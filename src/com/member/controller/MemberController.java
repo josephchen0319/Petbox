@@ -29,7 +29,6 @@ public class MemberController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
-
 	}
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -44,7 +43,9 @@ public class MemberController extends HttpServlet {
 				String email = req.getParameter("email");
 				String emailReg = "^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";
 
-				if (email == null || (email.trim().length()) == 0) {
+//				if (email == null || (email.trim().length()) == 0) {
+				
+				if("".equals(email)) {
 //					errorMsgs.add("請輸入電子郵件");
 					errorMsgs.add("Please enter your email");
 				} else if (!email.trim().matches(emailReg)) {
@@ -53,14 +54,20 @@ public class MemberController extends HttpServlet {
 				}
 
 				String password = req.getParameter("password");
-				if (password == null || (password.trim().length()) == 0) {
+				if ("".equals(password)) {
 					errorMsgs.add("Please enter your password");
 				}
+				
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = req.getRequestDispatcher("/front-end/member/login.jsp");
+					failureView.forward(req, res);
+					return;
+				}
 
-				memberVO = mbSvc.login(email, password);
+				boolean login = mbSvc.login(email, password);
 
-				if (memberVO == null) {
-					errorMsgs.add("Email or Password not correct");
+				if (login == false) {
+					errorMsgs.add("Email or Password incorrect");
 				}
 
 				if (!errorMsgs.isEmpty()) {
@@ -69,20 +76,18 @@ public class MemberController extends HttpServlet {
 					return;
 				}
 
-				req.getSession().setAttribute("memberVO", memberVO);
+				req.getSession().setAttribute("email", email);
 
-				System.out.println(memberVO.getPassword());
 				RequestDispatcher view = req.getRequestDispatcher("/front-end/member/updateInfo.jsp");
 				view.forward(req, res);
 				return;
 
 			} catch (Exception e) {
-				errorMsgs.add(e.getMessage());
+				errorMsgs.add("Error occurred");
 				RequestDispatcher failureView = req.getRequestDispatcher("/front-end/member/updateInfo.jsp");
 				failureView.forward(req, res);
 				return;
 			}
-
 		}
 
 		if ("signup".equals(action)) {
@@ -99,23 +104,20 @@ public class MemberController extends HttpServlet {
 
 				String name = req.getParameter("name");
 				String email = req.getParameter("email");
-
 				String phone_num = req.getParameter("phone_num");
 				String password = req.getParameter("password");
 				String confirm = req.getParameter("confirm");
 				String address = req.getParameter("address");
 				String sex = req.getParameter("sex");
-
 				String birthday = req.getParameter("birthday");
 
 				// use ajax to check valid field in real time
-				if (name == null || (name.trim().length() == 0)) { // check if name field is empty
+				if ("".equals(name)) { // check if name field is empty
 					errorMsgs.add("You must enter a name");
 				} else if (!name.trim().matches(nameReg)) {
 					errorMsgs.add("Name field does not allow special characters");
 					name = "";
-				} else if (name.trim().matches(chineseReg) && name.trim().matches(englishReg)) { // check if name field is
-																																													// invalid
+				} else if (name.trim().matches(chineseReg) && name.trim().matches(englishReg)) { // check if name field is invalid
 					errorMsgs.add("Name field only allows Chinese or English， you can't mix them");
 					name = "";
 				} else if (name.trim().matches(chineseReg) && name.trim().length() >= 7) { // check if chinese name(length > 7)
@@ -126,7 +128,7 @@ public class MemberController extends HttpServlet {
 					name = "";
 				}
 
-				if (email == null || (email.trim().length()) == 0) { // Check if email field is empty
+				if ("".equals(email)) { // Check if email field is empty
 					errorMsgs.add("You must enter an email address");
 				} else if (!email.trim().matches(emailReg)) { // check if email format is incorrect(50 chars)
 					errorMsgs.add("Please enter a valid email address");
@@ -142,7 +144,7 @@ public class MemberController extends HttpServlet {
 					phone_num = "";
 				}
 
-				if (password == null || (password.trim().length()) == 0) { // check if password field is empty
+				if ("".equals(password)) { // check if password field is empty
 					errorMsgs.add("You must enter a password");
 					password = "";
 				} else if (!password.equals(confirm)) {
@@ -150,7 +152,7 @@ public class MemberController extends HttpServlet {
 					password = "";
 				}
 
-				if (confirm == null || (password.trim().length()) == 0) { // check if confirm password field is empty
+				if ("".equals(confirm)) { // check if confirm password field is empty
 					errorMsgs.add("You must confirm your password");
 					confirm = "";
 				}
@@ -195,7 +197,7 @@ public class MemberController extends HttpServlet {
 
 				memberVO = mbSvc.signUp(memberVO);
 
-				if (memberVO.getEmail() == "") {
+				if ("".equals(memberVO.getEmail())) {
 					errorMsgs.add("This email has been registered");
 					RequestDispatcher failureView = req.getRequestDispatcher("/front-end/member/signUp.jsp");
 					failureView.forward(req, res);
@@ -242,7 +244,6 @@ public class MemberController extends HttpServlet {
 				}
 
 				memberVO = (MemberVO) req.getSession().getAttribute("memberVO");
-				System.out.println(memberVO.getPassword());
 				java.sql.Date bday = null;
 
 				try {
@@ -266,12 +267,11 @@ public class MemberController extends HttpServlet {
 						memberVO.setPassword(password);
 					}
 				}
-				System.out.println("before update: " + memberVO.getPassword());
 
 				memberVO = mbSvc.updateInfo(memberVO, new_password);
 
-				System.out.println("after update: " + memberVO.getPassword());
 
+				//error
 				if (memberVO.getPassword().trim().length() == 0) {
 					errorMsgs.add("Your current password is incorrect");
 				}

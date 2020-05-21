@@ -18,8 +18,16 @@ public class AdminJDBCDAO implements AdminDAO_interface {
 	public static void main(String[] args) {
 		AdminJDBCDAO dao = new AdminJDBCDAO();
 		AdminVO adminVO = new AdminVO();
+		String str = "apple";
+		String str1 = "";
+		String str2 = null;
 		// GET_ONE
 		System.out.println(dao.findByAccount("admin1").getAdmin_id());
+		if("".equals(str2)) {
+			System.out.println("It's empty string");			
+		} else {
+			System.out.println("not empty or null");
+		}
 		// INSERT
 //		adminVO.setAdmin_account("admin10");
 //		adminVO.setAdmin_password("123");

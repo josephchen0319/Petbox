@@ -18,10 +18,19 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	public static void main(String[] args) {
 		MemberJDBCDAO dao = new MemberJDBCDAO();
 		MemberVO memberVO = new MemberVO();
+		String name = "好你apple";
+		String chineseReg = "^[(\u4e00-\u9fa5)]+";
+		String englishReg = "^[(a-zA-Z)]+";
+		
+		if (name.trim().matches(chineseReg) && name.trim().matches(englishReg)) {
+			System.out.println("mix");
+		} else {
+			System.out.println("not mix");
+		}
 		// GET_ONE
 //		System.out.println(dao.findByPK("MB00001"));
 		// GET_BY_EMAIL
-		System.out.println(dao.findByEmail("igwt97jc@gmail.com"));
+//		System.out.println(dao.findByEmail("igwt97jc@gmail.com"));
 		// GET_APPLICANTS
 //		for (MemberVO m : dao.getApplicants()) {
 //			System.out.println(m);

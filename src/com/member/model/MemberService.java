@@ -22,17 +22,17 @@ public class MemberService {
 		return hashedPassword;
 	}
 
-	public MemberVO login(String email, String password) {
+	public boolean login(String email, String password) {
 		MemberVO memberVO = null;
 		if ((memberVO = dao.findByEmail(email)) != null) {
 			String hashedPassword = hashPassword(password);
 			String pass = memberVO.getPassword();
 			if (hashedPassword.equals(pass)) {
 				memberVO.setPassword(pass);
-				return memberVO;
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	public MemberVO signUp(MemberVO memberVO) {

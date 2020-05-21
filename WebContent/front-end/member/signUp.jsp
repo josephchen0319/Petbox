@@ -14,6 +14,7 @@
 <h1>Sign Up</h1>
 
 
+
   <form action="<%=request.getContextPath()%>/member/controller" method="post">
 	
     <label for="name">name*</label>
