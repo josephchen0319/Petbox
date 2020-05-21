@@ -128,7 +128,6 @@ public class MemberDAO implements MemberDAO_interface {
 		MemberVO memberVO = null;
 		ResultSet rs = null;
 		try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(GET_ONE);) {
-
 			ps.setString(1, member_id);
 			rs = ps.executeQuery();
 
@@ -136,7 +135,6 @@ public class MemberDAO implements MemberDAO_interface {
 				memberVO = new MemberVO();
 				memberVO.setMember_id(rs.getString("member_id"));
 				memberVO.setEmail(rs.getString("email"));
-				// setPassword�i��|���w���ʪ����D
 				memberVO.setPassword(rs.getString("password"));
 				memberVO.setName(rs.getString("name"));
 				memberVO.setSex(rs.getString("sex"));
@@ -155,9 +153,7 @@ public class MemberDAO implements MemberDAO_interface {
 				memberVO.setBank_account(rs.getString("bank_account"));
 				memberVO.setDocument_image(rs.getBytes("document_image"));
 				memberVO.setApplication_time(rs.getTimestamp("application_time"));
-
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("A database error occured. " + e.getMessage());
@@ -248,7 +244,7 @@ public class MemberDAO implements MemberDAO_interface {
 
 	public List<MemberVO> getApplicants() {
 
-		List<MemberVO> sellers = new ArrayList<>();
+		List<MemberVO> applicants = new ArrayList<>();
 		MemberVO memberVO;
 
 		try (Connection con = ds.getConnection();
@@ -265,10 +261,10 @@ public class MemberDAO implements MemberDAO_interface {
 				memberVO.setBank_account(rs.getString("bank_account"));
 				memberVO.setDocument_image(rs.getBytes("document_image"));
 				memberVO.setApplication_time(rs.getTimestamp("application_time"));
-				sellers.add(memberVO);
+				applicants.add(memberVO);
 			}
 
-			return sellers;
+			return applicants;
 
 		} catch (SQLException e) {
 			e.printStackTrace();

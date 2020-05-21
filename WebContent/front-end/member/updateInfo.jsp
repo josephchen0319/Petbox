@@ -58,7 +58,7 @@
 	    <label for="other">其他</label><br><br>
 		
 		<label for="profile_image">上傳照片</label>
-		<input type="file" id="profile_image" name="profile_image" value="${memberVO.profile_image}"><br><br>
+		<input type="file" id="profile_image" name="profile_image" value=""><br><br>
 		
 		<label for="password">舊密碼</label>
 		<input type="password" id="password" name="password"><br><br>
@@ -74,7 +74,11 @@
 		
 	</form>
 	<br><br>
+	
+	
+	
 	<div id="image_holder" style="display: inline-block; width: 400px; height: 400px; border: 1px solid black;">
+<%-- 		<img id="profile_image" width="100%" alt="test" src="data:image/png;base64,${memberVO.profile_image}"> --%>
 	</div>
 	<br><br>
 	

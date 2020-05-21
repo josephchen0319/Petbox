@@ -1,6 +1,7 @@
 package com.member.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,15 +19,6 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	public static void main(String[] args) {
 		MemberJDBCDAO dao = new MemberJDBCDAO();
 		MemberVO memberVO = new MemberVO();
-		String name = "好你apple";
-		String chineseReg = "^[(\u4e00-\u9fa5)]+";
-		String englishReg = "^[(a-zA-Z)]+";
-		
-		if (name.trim().matches(chineseReg) && name.trim().matches(englishReg)) {
-			System.out.println("mix");
-		} else {
-			System.out.println("not mix");
-		}
 		// GET_ONE
 //		System.out.println(dao.findByPK("MB00001"));
 		// GET_BY_EMAIL
@@ -36,38 +28,38 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //			System.out.println(m);
 //		}
 		// GET_ALL
-//		for (MemberVO m : dao.getAll()) {
-//			System.out.println(m);
-//		}
+		for (MemberVO m : dao.getAll()) {
+			System.out.println(m);
+		}
 		// INSERT
-//		memberVO.setEmail("apple@gmail.com");
-//		memberVO.setPassword("apple");
-//		memberVO.setName("�������F");
-//		memberVO.setSex("��L");
-//		memberVO.setAddress("�ڮa");
-//		memberVO.setBirthday(new Date(1000000));
-//		memberVO.setPhone_num("0987654321");
-//		memberVO.setProfile_image(null);
-//		memberVO.setNickname("hellooo");
-//		memberVO.setPet_class("��");
-//		memberVO.setBlog_cover_image(null);
-//		memberVO.setBlog_name("my diary");
-//		memberVO.setMember_state(0);
-//		memberVO.setId_number("A123456789");
-//		memberVO.setBank_account("1235465465413");
-//		memberVO.setDocument_image(null);
-//		dao.insert(memberVO);
+		memberVO.setEmail("apple@gmail.com");
+		memberVO.setPassword("apple");
+		memberVO.setName("黃衣二");
+		memberVO.setSex("男");
+		memberVO.setAddress("花蓮路中央街一段");
+		memberVO.setBirthday(new Date(1000000));
+		memberVO.setPhone_num("0987654321");
+		memberVO.setProfile_image(null);
+		memberVO.setNickname("hellooo");
+		memberVO.setPet_class("狗");
+		memberVO.setBlog_cover_image(null);
+		memberVO.setBlog_name("my diary");
+		memberVO.setMember_state(0);
+		memberVO.setId_number("A123456789");
+		memberVO.setBank_account("1235465465413");
+		memberVO.setDocument_image(null);
+		dao.insert(memberVO);
 		// UPDATE
 //		memberVO.setEmail("abble@gmail.com");
 //		memberVO.setPassword("abble");
-//		memberVO.setName("�����@����");
-//		memberVO.setSex("��L");
-//		memberVO.setAddress("�ڮa");
+//		memberVO.setName("黃一三");
+//		memberVO.setSex("男");
+//		memberVO.setAddress("花蓮路中央街二段");
 //		memberVO.setBirthday(new Date(1000000));
 //		memberVO.setPhone_num("0987654321");
 //		memberVO.setProfile_image(null);
 //		memberVO.setNickname("hellooo");
-//		memberVO.setPet_class("��");
+//		memberVO.setPet_class("貓");
 //		memberVO.setBlog_cover_image(null);
 //		memberVO.setBlog_name("my diary");
 //		memberVO.setMember_state(3);
@@ -97,6 +89,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 			+ "phone_num, profile_image, nickname, pet_class, blog_cover_image, blog_name, "
 			+ "create_time, update_time, member_state, id_number, bank_account, "
 			+ "document_image, application_time FROM member WHERE member_id = ?";
+	
 	private static final String GET_BY_EMAIL = "SELECT member_id, email, password, name, sex, address, to_char(birthday,'yyyy-mm-dd') birthday, "
 			+ "phone_num, profile_image, nickname, pet_class, blog_cover_image, blog_name, "
 			+ "create_time, update_time, member_state, id_number, bank_account, "
@@ -201,7 +194,6 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 					memberVO = new MemberVO();
 					memberVO.setMember_id(rs.getString("member_id"));
 					memberVO.setEmail(rs.getString("email"));
-					// setPassword�i��|���w���ʪ����D
 					memberVO.setPassword(rs.getString("password"));
 					memberVO.setName(rs.getString("name"));
 					memberVO.setSex(rs.getString("sex"));

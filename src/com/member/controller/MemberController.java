@@ -64,20 +64,25 @@ public class MemberController extends HttpServlet {
 					return;
 				}
 
-				boolean login = mbSvc.login(email, password);
-
-				if (login == false) {
+//				boolean login = mbSvc.login(email, password);
+				memberVO = mbSvc.login(email, password);
+				
+				if (memberVO == null) {
 					errorMsgs.add("Email or Password incorrect");
-				}
-
-				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req.getRequestDispatcher("/front-end/member/login.jsp");
 					failureView.forward(req, res);
 					return;
 				}
 
-				req.getSession().setAttribute("email", email);
+//				if (login == false) {
+//					errorMsgs.add("Email or Password incorrect");
+//					RequestDispatcher failureView = req.getRequestDispatcher("/front-end/member/login.jsp");
+//					failureView.forward(req, res);
+//					return;
+//				}
 
+				req.getSession().setAttribute("memberVO", memberVO);
+//				req.getSession().setAttribute("email", email);
 				RequestDispatcher view = req.getRequestDispatcher("/front-end/member/updateInfo.jsp");
 				view.forward(req, res);
 				return;
@@ -96,7 +101,7 @@ public class MemberController extends HttpServlet {
 			try {
 				String emailReg = "^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";
 				String phoneReg = "^09[0-9]{8}$";
-				String nameReg = "^[(\u4e00-\u9fa5) (a-zA-Z)]{2,20}$";
+				String nameReg = "^[(\u4e00-\u9fa5)\\s(a-zA-Z)]{1,}$";
 				String chineseReg = "^[(\u4e00-\u9fa5)]+";
 				String englishReg = "^[(a-zA-Z)]+";
 				String addressReg = "^[(\u4e00-\u9fa5) (0-9a-zA-Z).,]+";
@@ -117,17 +122,10 @@ public class MemberController extends HttpServlet {
 				} else if (!name.trim().matches(nameReg)) {
 					errorMsgs.add("Name field does not allow special characters");
 					name = "";
-				} else if (name.trim().matches(chineseReg) && name.trim().matches(englishReg)) { // check if name field is invalid
-					errorMsgs.add("Name field only allows Chinese or English， you can't mix them");
-					name = "";
-				} else if (name.trim().matches(chineseReg) && name.trim().length() >= 7) { // check if chinese name(length > 7)
-					errorMsgs.add("Name field only allows 6 chinese characters");
-					name = "";
-				} else if (name.trim().matches(englishReg) && name.trim().length() > 20) { // check if english name(length > 20)
-					errorMsgs.add("Name field only allows 20 english characters");
-					name = "";
+				} else if(name.trim().getBytes().length > 20) {
+					errorMsgs.add("Chinese name must less than 8 words, english name must less than 20 words");
 				}
-
+				
 				if ("".equals(email)) { // Check if email field is empty
 					errorMsgs.add("You must enter an email address");
 				} else if (!email.trim().matches(emailReg)) { // check if email format is incorrect(50 chars)
@@ -162,8 +160,7 @@ public class MemberController extends HttpServlet {
 					address = "";
 				}
 
-				// Some browsers do not support <input type="date">, so we need to use js to
-				// solve this problem
+				// Some browsers do not support <input type="date">, so we need to use js to solve this problem
 
 //				if(birthday.trim().matches(bdayReg)) {
 //					errorMsgs.add("Birthday field format must be YYYY-mm-dd");
@@ -244,6 +241,7 @@ public class MemberController extends HttpServlet {
 				}
 
 				memberVO = (MemberVO) req.getSession().getAttribute("memberVO");
+//				email = (String) req.getSession().getAttribute("email");
 				java.sql.Date bday = null;
 
 				try {
@@ -269,7 +267,6 @@ public class MemberController extends HttpServlet {
 				}
 
 				memberVO = mbSvc.updateInfo(memberVO, new_password);
-
 
 				//error
 				if (memberVO.getPassword().trim().length() == 0) {

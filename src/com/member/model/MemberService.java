@@ -22,18 +22,33 @@ public class MemberService {
 		return hashedPassword;
 	}
 
-	public boolean login(String email, String password) {
+//	public boolean login(String email, String password) {
+//		MemberVO memberVO = null;
+//		if ((memberVO = dao.findByEmail(email)) != null) {
+//			String hashedPassword = hashPassword(password);
+//			String pass = memberVO.getPassword();
+//			if (hashedPassword.equals(pass)) {
+//				memberVO.setPassword(pass);
+//				
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+	
+	public MemberVO login(String email, String password) {
 		MemberVO memberVO = null;
 		if ((memberVO = dao.findByEmail(email)) != null) {
 			String hashedPassword = hashPassword(password);
 			String pass = memberVO.getPassword();
 			if (hashedPassword.equals(pass)) {
 				memberVO.setPassword(pass);
-				return true;
+				return memberVO;
 			}
 		}
-		return false;
+		return null;
 	}
+
 
 	public MemberVO signUp(MemberVO memberVO) {
 
@@ -56,7 +71,6 @@ public class MemberService {
 		String input_password = memberVO.getPassword();
 		String old_password = hashPassword(input_password);
 		String stored_password = dao.findByEmail(memberVO.getEmail()).getPassword();
-		System.out.println("this is password: " + input_password);
 		
 		if (old_password.equals(stored_password)) {
 			memberVO.setPassword(hashPassword(new_password));

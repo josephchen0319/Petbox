@@ -23,7 +23,6 @@ public class MemberVO implements Serializable {
 	private Timestamp create_time;
 	private Timestamp update_time;
 	private Integer member_state;
-	// t:身分證字號
 	private String id_number;
 	private String bank_account;
 
